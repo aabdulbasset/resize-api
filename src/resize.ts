@@ -1,5 +1,4 @@
 import sharp from 'sharp'
-import path from 'path'
 function main(fileName:string,dimensions:number[]):void{
 
         sharp(`../images/full/${fileName}.jpg`)
