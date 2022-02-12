@@ -12,7 +12,10 @@ To Start this project run
   npm run start
 ```
 
-
+To build the project only
+```bash
+  npm run build
+```
 ## Running Tests
 
 For Jasmine tests 
@@ -25,3 +28,10 @@ For Eslint with prettier
 ```bash
   npm run lint
 ```
+## Usage/Examples
+/api/images?filename={filename}&width={width}&height={height}
+```javascript
+/api/images?filename=test&width=100&height=100
+/api/images?filename=sky&width=100&height=100
+```
+
