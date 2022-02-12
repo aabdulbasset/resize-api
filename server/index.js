@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var fs_1 = __importDefault(require("fs"));
 var resize_1 = __importDefault(require("./resize"));
-var path_1 = __importDefault(require("path"));
 var port = 3000;
 var app = (0, express_1.default)();
 //start the app
@@ -14,7 +13,7 @@ app.listen(port, function () {
     console.log("Server working on ".concat(port));
 });
 //set static files to serve the image
-app.use(express_1.default.static(path_1.default.resolve("../images/thumb")));
+app.use(express_1.default.static(__dirname + "/../images/thumb"));
 app.get("/api/images", function (req, res) {
     //Number returns NAN if not a number
     var filename = req.query.filename;
@@ -23,17 +22,17 @@ app.get("/api/images", function (req, res) {
     //data is formatted before being sent to "sanitize"
     var isValid = sanitize(filename, width, height);
     if (isValid == -1) {
-        res.send("Invalid request").status(400);
+        res.status(400).send("Invalid request");
         return;
     }
     //check if the image exists in full size
-    fs_1.default.stat("../images/full/".concat(filename, ".jpg"), function (err) {
+    fs_1.default.stat("".concat(__dirname, "/../images/full/").concat(filename, ".jpg"), function (err) {
         if (err != null) {
-            res.send("Image does not exist").status(400);
+            res.status(400).send("Image does not exist");
         }
         else {
             //check if it is already processed
-            fs_1.default.stat("../images/thumb/".concat(filename, "_").concat(width, "x").concat(height, ".jpg"), function (err) {
+            fs_1.default.stat("".concat(__dirname, "/../images/thumb/").concat(filename, "_").concat(width, "x").concat(height, ".jpg"), function (err) {
                 if (err == null) {
                     void (0);
                 }
@@ -48,10 +47,10 @@ app.get("/api/images", function (req, res) {
     });
 });
 function sanitize(filename, width, height) {
-    if (filename.search('[^a-zA-Z0-9]') >= 0) {
+    if (filename == undefined || filename == "") {
         return -1;
     }
-    if (filename == undefined || filename == "") {
+    if (filename.search('[^a-zA-Z0-9]') >= 0) {
         return -1;
     }
     if (width <= 0 || isNaN(width) || height <= 0 || isNaN(height) || width > 2000 || height > 2000 || !Number.isInteger(width) || !Number.isInteger(height)) {

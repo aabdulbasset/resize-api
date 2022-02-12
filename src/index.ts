@@ -9,7 +9,7 @@ app.listen(port,():void=>{
     console.log(`Server working on ${port}`)
 })
 //set static files to serve the image
-app.use(express.static(path.resolve("../images/thumb")));
+app.use(express.static(__dirname + "/../images/thumb"));
 
 app.get("/api/images",(req:express.Request ,res:express.Response):void=>{
     //Number returns NAN if not a number
@@ -19,17 +19,17 @@ app.get("/api/images",(req:express.Request ,res:express.Response):void=>{
     //data is formatted before being sent to "sanitize"
     let isValid = sanitize(filename ,width,height)
     if(isValid == -1){
-        res.send("Invalid request").status(400)
+        res.status(400).send("Invalid request")
         return
     }
     //check if the image exists in full size
-    fs.stat(`../images/full/${filename}.jpg`,function(err:NodeJS.ErrnoException | null):void{
+    fs.stat(`${__dirname}/../images/full/${filename}.jpg`,function(err:NodeJS.ErrnoException | null):void{
         if(err != null){
-            res.send("Image does not exist").status(400)
+            res.status(400).send("Image does not exist")
 
         }else{
             //check if it is already processed
-            fs.stat(`../images/thumb/${filename}_${width}x${height}.jpg`,function(err:NodeJS.ErrnoException | null):void{
+            fs.stat(`${__dirname}/../images/thumb/${filename}_${width}x${height}.jpg`,function(err:NodeJS.ErrnoException | null):void{
                 if(err==null){
                     void(0)
                     
@@ -48,10 +48,11 @@ app.get("/api/images",(req:express.Request ,res:express.Response):void=>{
 })
 
 function sanitize(filename:string,width:number,height:number):number{
-    if(filename.search('[^a-zA-Z0-9]')>=0){
+
+    if(filename == undefined || filename == ""){
         return -1
     }
-    if(filename == undefined || filename == ""){
+    if(filename.search('[^a-zA-Z0-9]')>=0){
         return -1
     }
     if(width <= 0 || isNaN(width) || height <= 0 || isNaN(height) || width > 2000 || height > 2000 || !Number.isInteger(width) || !Number.isInteger(height) ){
