@@ -4,10 +4,13 @@ import resize from './resize'
 import path from 'path'
 let port = 3000
 const app = express()
+//start the app
 app.listen(port,():void=>{
     console.log(`Server working on ${port}`)
 })
+//set static files to serve the image
 app.use(express.static(path.resolve("../images/thumb")));
+
 app.get("/api/images",(req:express.Request ,res:express.Response):void=>{
     //Number returns NAN if not a number
     let filename = req.query.filename as string
@@ -19,17 +22,19 @@ app.get("/api/images",(req:express.Request ,res:express.Response):void=>{
         res.send("Invalid request").status(400)
         return
     }
+    //check if the image exists in full size
     fs.stat(`../images/full/${filename}.jpg`,function(err:NodeJS.ErrnoException | null):void{
         if(err != null){
             res.send("Image does not exist").status(400)
 
         }else{
+            //check if it is already processed
             fs.stat(`../images/thumb/${filename}_${width}x${height}.jpg`,function(err:NodeJS.ErrnoException | null):void{
                 if(err==null){
-                    console.log("sending cache")
+                    void(0)
                     
                 }else{
-                    console.log("Resizing")
+                    
                     resize(filename,[width,height])
                 }
                 setTimeout(()=>{

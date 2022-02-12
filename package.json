@@ -22,7 +22,7 @@
   "version": "1.0.0",
   "main": "server/index.js",
   "scripts": {
-    "start":"npx tsc && node server/index",
+    "start":"npx tsc && cd server && node index",
     "test": "npx tsc && jasmine",
     "pretty": "prettier --config .prettierrc server/*.js --write",
     "lint": "eslint ./server/*.js --fix",
