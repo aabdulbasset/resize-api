@@ -3,7 +3,13 @@
 
 A simple image resizing api made with express and nodejs
 
-
+## Changelog
+- Added a ts parser for typescript
+- Added prettier as a dev dependency
+- Fixed a broken .eslintrc.js file 
+- Eslint and prettier now work on typescript not on javascript
+- Added jasmine tests for sharp 
+- Added Error handling in the image processing
 ## Guide
 
 To Start this project run
@@ -34,4 +40,3 @@ For Eslint with prettier
 /api/images?filename=test&width=100&height=100
 /api/images?filename=sky&width=100&height=100
 ```
-
